@@ -19,7 +19,7 @@ function doPost(e) {
     var sheet = ss.getSheetByName(sheetName);
     if (!sheet) {
       sheet = ss.insertSheet(sheetName);
-      var headers = ['Timestamp', 'Name', 'Overall Rating', 'Satisfaction'];
+      var headers = ['Timestamp', 'Name', 'Email', 'Overall Rating', 'Satisfaction'];
       for (var i = 0; i < topics.length; i++) {
         headers.push(topics[i] + ' Rating');
       }
@@ -36,6 +36,7 @@ function doPost(e) {
     var row = [
       data.timestamp || new Date().toISOString(),
       data.name || 'Anonymous',
+      data.email || '',
       data.overallRating,
       data.satisfaction
     ];

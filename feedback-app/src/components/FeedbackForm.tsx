@@ -14,6 +14,7 @@ const SATISFACTION = ['Very Unsatisfied', 'Unsatisfied', 'Neutral', 'Satisfied',
 
 export default function FeedbackForm({ type, scriptUrl }: FeedbackFormProps) {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [overallRating, setOverallRating] = useState(0);
   const [comment, setComment] = useState('');
   const [satisfaction, setSatisfaction] = useState('');
@@ -31,6 +32,7 @@ export default function FeedbackForm({ type, scriptUrl }: FeedbackFormProps) {
   const commentError = touched && comment.trim() === '' ? 'Comment is required' : '';
   const satisfactionError = touched && !satisfaction ? 'Please select one' : '';
   const nameError = touched && name.trim() === '' ? 'Name is required' : '';
+  const emailError = touched && email.trim() === '' ? 'Email is required' : '';
 
   const handleTopicRate = (topic: string, value: number) => {
     setTopicRatings((prev) => ({ ...prev, [topic]: value }));
@@ -39,13 +41,14 @@ export default function FeedbackForm({ type, scriptUrl }: FeedbackFormProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setTouched(true);
-    if (overallRating === 0 || comment.trim() === '' || !satisfaction || name.trim() === '') return;
+    if (overallRating === 0 || comment.trim() === '' || !satisfaction || name.trim() === '' || email.trim() === '') return;
 
     setStatus('submitting');
     try {
       const payload = {
         type,
         name: name.trim(),
+        email: email.trim(),
         overallRating,
         satisfaction,
         topicRatings,
@@ -59,6 +62,7 @@ export default function FeedbackForm({ type, scriptUrl }: FeedbackFormProps) {
       });
       setStatus('success');
       setName('');
+      setEmail('');
       setOverallRating(0);
       setComment('');
       setSatisfaction('');
@@ -95,6 +99,22 @@ export default function FeedbackForm({ type, scriptUrl }: FeedbackFormProps) {
           className={inputClasses}
         />
         {nameError && <p className="text-error text-sm mt-2 animate-fade-in">{nameError}</p>}
+      </div>
+
+      {/* Email */}
+      <div>
+        <label htmlFor={`email-${type}`} className={labelClasses}>
+          Email <span className="text-error">*</span>
+        </label>
+        <input
+          id={`email-${type}`}
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your@email.com"
+          className={inputClasses}
+        />
+        {emailError && <p className="text-error text-sm mt-2 animate-fade-in">{emailError}</p>}
       </div>
 
       {/* Overall Rating */}
